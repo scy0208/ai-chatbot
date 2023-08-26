@@ -15,7 +15,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration)
 
 const feedebackClient = new Client({
-  projectId: process.env.NEXT_PUBLIC_LLM_PROJECT || "",
+  projectId: process.env.NEXT_PUBLIC_LLM_PROJECT || "YOUR LLM_FEEDBACK_PROJECT_ID",
   apiKey: 'YOUR_API_KEY'
 });
 
