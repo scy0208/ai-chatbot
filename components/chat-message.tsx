@@ -10,10 +10,17 @@ import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
+import { Button } from '@/components/ui/button'
+import { Client } from 'llm-feedback-client'
 
 export interface ChatMessageProps {
   message: Message
 }
+
+const feedebackClient = new Client({
+  projectId: process.env.NEXT_PUBLIC_LLM_PROJECT || "YOUR LLM_FEEDBACK_PROJECT_ID",
+  apiKey: 'YOUR_API_KEY'
+});
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
   return (
@@ -75,6 +82,21 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         </MemoizedReactMarkdown>
         <ChatMessageActions message={message} />
       </div>
+      {message.role=='assistant'&& (
+        <div>
+        <Button onClick={(event) => {
+            feedebackClient.createFeedback({
+                contentId: feedebackClient.contentUUID(message.content, message.createdAt),
+                key: "thumb_up",
+                score: 1,
+                comment: "great content",
+                user: "user"
+            });
+        }}>
+            thumbup
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
